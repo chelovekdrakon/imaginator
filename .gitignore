@@ -4,6 +4,9 @@
 
 .vscode
 
+## Credentials
+Keys.plist
+
 ## Build generated
 build/
 DerivedData/

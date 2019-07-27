@@ -12,8 +12,9 @@
 
 NSString * const OAuth2BaseUrl = @"https://unsplash.com/oauth/";
 NSString * const appUrlScheme = @"imaginatorapp";
+NSString * const userDefaultsTokens = @"user_access_token";
 
-@interface LoginViewController () <UIApplicationDelegate, WKUIDelegate, WKNavigationDelegate, NSURLSessionDelegate>
+@interface LoginViewController () <WKUIDelegate, WKNavigationDelegate>
 @property(retain, nonatomic) NSString *secretKey;
 @property(retain, nonatomic) NSString *accessKey;
 @property(retain, nonatomic) NSString *redirectURI;
@@ -91,6 +92,14 @@ NSString * const appUrlScheme = @"imaginatorapp";
     
     self.view.backgroundColor = [self getRandomColor];
     
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary *tokens = [userDefaults objectForKey:userDefaultsTokens];
+    
+    if (tokens) {
+        NSLog(@"asd");
+        return;
+    }
+    
     NSString *urlString = [NSString stringWithFormat:@"%@authorize", OAuth2BaseUrl];
     
     NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithString:urlString];
@@ -100,8 +109,6 @@ NSString * const appUrlScheme = @"imaginatorapp";
         [NSURLQueryItem queryItemWithName:@"response_type" value:@"code"],
         [NSURLQueryItem queryItemWithName:@"scope" value:@"public"],
     ];
-    
-//    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:urlComponents.URL];
     
     NSString *authHeader = [NSString stringWithFormat:@"Client-ID %@", self.accessKey];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:urlComponents.URL];
@@ -117,9 +124,7 @@ NSString * const appUrlScheme = @"imaginatorapp";
 #pragma mark - WKNavigationDelegate
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
-    UIApplication *app = [UIApplication sharedApplication];
     NSURL *url = navigationAction.request.URL;
-    
     NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:YES];
     
     NSString *code = nil;
@@ -131,14 +136,7 @@ NSString * const appUrlScheme = @"imaginatorapp";
         }
     }
 
-    if ([url.scheme isEqualToString:appUrlScheme] &&
-        [app canOpenURL:url]) {
-        [app openURL:url options:@{} completionHandler:^(BOOL success) {
-            decisionHandler(WKNavigationActionPolicyCancel);
-            // handle
-        }];
-        
-    } if (code) {
+    if (code) {
         decisionHandler(WKNavigationActionPolicyCancel);
         [self requestAuthTokenWithCode:code];
         [self.webView removeFromSuperview];
@@ -149,46 +147,46 @@ NSString * const appUrlScheme = @"imaginatorapp";
 
 - (void)requestAuthTokenWithCode:(NSString *)code {
     NSString *urlString = [NSString stringWithFormat:@"%@token", OAuth2BaseUrl];
-    NSURL *url = [NSURL URLWithString:urlString];
+    NSURLComponents *urlComponents = [NSURLComponents componentsWithString:urlString];
+    urlComponents.queryItems = @[
+                              [NSURLQueryItem queryItemWithName:@"code" value:code],
+                              [NSURLQueryItem queryItemWithName:@"client_id" value:self.accessKey],
+                              [NSURLQueryItem queryItemWithName:@"client_secret" value:self.secretKey],
+                              [NSURLQueryItem queryItemWithName:@"redirect_uri" value:self.redirectURI],
+                              [NSURLQueryItem queryItemWithName:@"grant_type" value:@"authorization_code"],
+                              ];
     
-    NSDictionary *params = @{
-                             @"client_id": self.accessKey,
-                             @"client_secret": self.secretKey,
-                             @"redirect_uri": self.redirectURI,
-                             @"code": code,
-                             @"grant_type": @"authorization_code"
-                             };
-    
-    NSData *body = [NSJSONSerialization
-                        dataWithJSONObject:params
-                        options:kNilOptions
-                        error:nil];
-    
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:urlComponents.URL];
     request.HTTPMethod = @"POST";
-    request.HTTPBody = body;
-    
-    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:body options:kNilOptions error:nil];
     
     NSURLSessionDataTask *task = [self.session
                                   dataTaskWithRequest:request
                                   completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
                                       
+                                      NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                                      
+                                      if (httpResponse.statusCode != 200) {
+                                          NSLog(@"Response status code: %ld", httpResponse.statusCode);
+                                          return;
+                                      }
+
                                       if (error) {
                                           NSLog(@"Error: %@", error.localizedDescription);
                                           return;
                                       }
-                                      
+
                                       NSError *parsingError = nil;
                                       NSDictionary *jsonDic = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&parsingError];
-                                      
+
                                       if (parsingError) {
                                           NSLog(@"Error parsin JSON: %@", parsingError.localizedDescription);
                                           return;
                                       }
                                       
-                                      NSLog(@"Dic: %@", jsonDic);
+                                      NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+                                      [userDefaults setObject:jsonDic forKey:userDefaultsTokens];
     }];
+    
     [task resume];
 }
 

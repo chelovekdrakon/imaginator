@@ -6,17 +6,22 @@
 //  Copyright © 2019 Фёдор Морев. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "LoginViewController.h"
 
-@interface ViewController ()
+@interface LoginViewController ()
 
 @end
 
-@implementation ViewController
+@implementation LoginViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+}
+
+- (void)dealloc {
+    [super dealloc];
+    NSLog(@"dealloca of first VC");
 }
 
 

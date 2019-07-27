@@ -14,6 +14,7 @@
 		3200B2C222EC3272008CF5E0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3200B2C122EC3272008CF5E0 /* main.m */; };
 		3200B2CC22EC3272008CF5E0 /* ImaginatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3200B2CB22EC3272008CF5E0 /* ImaginatorTests.m */; };
 		3200B2D822EC3AEB008CF5E0 /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3200B2D722EC3AEB008CF5E0 /* Keys.plist */; };
+		3200B2DB22EC4D6C008CF5E0 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3200B2DA22EC4D6C008CF5E0 /* Accounts.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,7 @@
 		3200B2CB22EC3272008CF5E0 /* ImaginatorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImaginatorTests.m; sourceTree = "<group>"; };
 		3200B2CD22EC3272008CF5E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3200B2D722EC3AEB008CF5E0 /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
+		3200B2DA22EC4D6C008CF5E0 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3200B2DB22EC4D6C008CF5E0 /* Accounts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,6 +69,7 @@
 				3200B2B122EC3270008CF5E0 /* Imaginator */,
 				3200B2CA22EC3272008CF5E0 /* ImaginatorTests */,
 				3200B2B022EC3270008CF5E0 /* Products */,
+				3200B2D922EC4D6C008CF5E0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -109,6 +113,14 @@
 				3200B2B622EC3270008CF5E0 /* LoginViewController.m */,
 			);
 			path = controllers;
+			sourceTree = "<group>";
+		};
+		3200B2D922EC4D6C008CF5E0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3200B2DA22EC4D6C008CF5E0 /* Accounts.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -366,7 +378,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X4634FD8JW;
 				INFOPLIST_FILE = Imaginator/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10;
+				IPHONEOS_DEPLOYMENT_TARGET = 11;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -384,7 +396,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X4634FD8JW;
 				INFOPLIST_FILE = Imaginator/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10;
+				IPHONEOS_DEPLOYMENT_TARGET = 11;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -9,19 +9,29 @@
 #import "LoginViewController.h"
 
 @interface LoginViewController ()
-
+@property(retain, nonatomic) NSString *secretKey;
+@property(retain, nonatomic) NSString *accessKey;
 @end
 
 @implementation LoginViewController
 
+- (void)loadView {
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"Keys" ofType:@"plist"];
+    NSDictionary *plistData = [NSDictionary dictionaryWithContentsOfFile:filePath];
+    
+    self.secretKey = [plistData objectForKey:@"SECRET_KEY"];
+    self.accessKey = [plistData objectForKey:@"ACCESS_KEY"];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    
 }
 
 - (void)dealloc {
     [super dealloc];
-    NSLog(@"dealloca of first VC");
+    NSLog(@"dealloca of Login VC");
 }
 
 

@@ -15,6 +15,9 @@
 		3200B2CC22EC3272008CF5E0 /* ImaginatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3200B2CB22EC3272008CF5E0 /* ImaginatorTests.m */; };
 		3200B2D822EC3AEB008CF5E0 /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3200B2D722EC3AEB008CF5E0 /* Keys.plist */; };
 		3200B2DB22EC4D6C008CF5E0 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3200B2DA22EC4D6C008CF5E0 /* Accounts.framework */; };
+		325709CF22EDF24100D796AB /* Colors.m in Sources */ = {isa = PBXBuildFile; fileRef = 325709CE22EDF24100D796AB /* Colors.m */; };
+		325709D322EDF42D00D796AB /* CollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 325709D222EDF42D00D796AB /* CollectionViewController.m */; };
+		325709D622EDFF8F00D796AB /* CollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 325709D522EDFF8F00D796AB /* CollectionViewLayout.m */; };
 		32F4E0AA22EDBE6400EF70EE /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F4E0A922EDBE6400EF70EE /* MainViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +46,12 @@
 		3200B2CD22EC3272008CF5E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3200B2D722EC3AEB008CF5E0 /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		3200B2DA22EC4D6C008CF5E0 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		325709CD22EDF24100D796AB /* Colors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Colors.h; sourceTree = "<group>"; };
+		325709CE22EDF24100D796AB /* Colors.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Colors.m; sourceTree = "<group>"; };
+		325709D122EDF42D00D796AB /* CollectionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollectionViewController.h; sourceTree = "<group>"; };
+		325709D222EDF42D00D796AB /* CollectionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CollectionViewController.m; sourceTree = "<group>"; };
+		325709D422EDFF8F00D796AB /* CollectionViewLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollectionViewLayout.h; sourceTree = "<group>"; };
+		325709D522EDFF8F00D796AB /* CollectionViewLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CollectionViewLayout.m; sourceTree = "<group>"; };
 		32F4E0A822EDBE6400EF70EE /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		32F4E0A922EDBE6400EF70EE /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -96,6 +105,7 @@
 				3200B2C022EC3272008CF5E0 /* Info.plist */,
 				3200B2D722EC3AEB008CF5E0 /* Keys.plist */,
 				3200B2C122EC3272008CF5E0 /* main.m */,
+				325709D022EDF24B00D796AB /* utils */,
 			);
 			path = Imaginator;
 			sourceTree = "<group>";
@@ -116,6 +126,7 @@
 				32F4E0A922EDBE6400EF70EE /* MainViewController.m */,
 				3200B2B522EC3270008CF5E0 /* LoginViewController.h */,
 				3200B2B622EC3270008CF5E0 /* LoginViewController.m */,
+				325709CC22EDEE9500D796AB /* CollectionView */,
 			);
 			path = controllers;
 			sourceTree = "<group>";
@@ -126,6 +137,26 @@
 				3200B2DA22EC4D6C008CF5E0 /* Accounts.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		325709CC22EDEE9500D796AB /* CollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				325709D422EDFF8F00D796AB /* CollectionViewLayout.h */,
+				325709D522EDFF8F00D796AB /* CollectionViewLayout.m */,
+				325709D122EDF42D00D796AB /* CollectionViewController.h */,
+				325709D222EDF42D00D796AB /* CollectionViewController.m */,
+			);
+			path = CollectionView;
+			sourceTree = "<group>";
+		};
+		325709D022EDF24B00D796AB /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				325709CD22EDF24100D796AB /* Colors.h */,
+				325709CE22EDF24100D796AB /* Colors.m */,
+			);
+			path = utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -229,6 +260,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				3200B2B722EC3270008CF5E0 /* LoginViewController.m in Sources */,
+				325709D622EDFF8F00D796AB /* CollectionViewLayout.m in Sources */,
+				325709D322EDF42D00D796AB /* CollectionViewController.m in Sources */,
+				325709CF22EDF24100D796AB /* Colors.m in Sources */,
 				3200B2C222EC3272008CF5E0 /* main.m in Sources */,
 				32F4E0AA22EDBE6400EF70EE /* MainViewController.m in Sources */,
 				3200B2B422EC3270008CF5E0 /* AppDelegate.m in Sources */,

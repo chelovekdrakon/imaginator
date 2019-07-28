@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LoginViewController : UIViewController
+extern NSString *const userDefaultsTokens;
 
+
+@interface LoginViewController : UIViewController
 
 @end
 

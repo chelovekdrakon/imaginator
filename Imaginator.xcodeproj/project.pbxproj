@@ -15,6 +15,7 @@
 		3200B2CC22EC3272008CF5E0 /* ImaginatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3200B2CB22EC3272008CF5E0 /* ImaginatorTests.m */; };
 		3200B2D822EC3AEB008CF5E0 /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3200B2D722EC3AEB008CF5E0 /* Keys.plist */; };
 		3200B2DB22EC4D6C008CF5E0 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3200B2DA22EC4D6C008CF5E0 /* Accounts.framework */; };
+		32F4E0AA22EDBE6400EF70EE /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F4E0A922EDBE6400EF70EE /* MainViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,8 @@
 		3200B2CD22EC3272008CF5E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3200B2D722EC3AEB008CF5E0 /* Keys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		3200B2DA22EC4D6C008CF5E0 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		32F4E0A822EDBE6400EF70EE /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		32F4E0A922EDBE6400EF70EE /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +112,8 @@
 		3200B2D622EC3A45008CF5E0 /* controllers */ = {
 			isa = PBXGroup;
 			children = (
+				32F4E0A822EDBE6400EF70EE /* MainViewController.h */,
+				32F4E0A922EDBE6400EF70EE /* MainViewController.m */,
 				3200B2B522EC3270008CF5E0 /* LoginViewController.h */,
 				3200B2B622EC3270008CF5E0 /* LoginViewController.m */,
 			);
@@ -225,6 +230,7 @@
 			files = (
 				3200B2B722EC3270008CF5E0 /* LoginViewController.m in Sources */,
 				3200B2C222EC3272008CF5E0 /* main.m in Sources */,
+				32F4E0AA22EDBE6400EF70EE /* MainViewController.m in Sources */,
 				3200B2B422EC3270008CF5E0 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

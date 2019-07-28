@@ -7,11 +7,9 @@
 //
 
 #import "LoginViewController.h"
-#import <Accounts/Accounts.h>
 #import <WebKit/WebKit.h>
 
 NSString * const OAuth2BaseUrl = @"https://unsplash.com/oauth/";
-NSString * const appUrlScheme = @"imaginatorapp";
 NSString * const userDefaultsTokens = @"user_access_token";
 
 @interface LoginViewController () <WKUIDelegate, WKNavigationDelegate>
@@ -20,9 +18,7 @@ NSString * const userDefaultsTokens = @"user_access_token";
 @property(retain, nonatomic) NSString *redirectURI;
 
 @property(retain, nonatomic) NSURLSession *session;
-
 @property(retain, nonatomic) WKWebView *webView;
-@property(retain, nonatomic) WKWebViewConfiguration *webViewConfig;
 @end
 
 @implementation LoginViewController
@@ -56,49 +52,33 @@ NSString * const userDefaultsTokens = @"user_access_token";
 - (void)dealloc {
     [super dealloc];
     
-    [self.secretKey release];
-    [self.accessKey release];
-    [self.session release];
+    [_secretKey release];
+    [_accessKey release];
+    [_redirectURI release];
     
-    [self.webViewConfig release];
-    [self.webView release];
+    [_session release];
+    [_webView release];
     
-    NSLog(@"dealloca of Login VC");
+    NSLog(@"LoginVC deallocated!");
 }
 
 - (void)loadView {
     [super loadView];
     
-    self.webViewConfig = [[WKWebViewConfiguration alloc] init];
+    WKWebViewConfiguration *wvConfig = [[WKWebViewConfiguration alloc] init];
     
-    self.webView = [[WKWebView alloc] initWithFrame:[self.view bounds] configuration:self.webViewConfig];
+    self.webView = [[WKWebView alloc] initWithFrame:[self.view bounds] configuration:wvConfig];
     self.webView.UIDelegate = self;
     self.webView.navigationDelegate = self;
     
-    [self.view addSubview:self.webView];
+    self.view = self.webView;
     
-    self.webView.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    [NSLayoutConstraint activateConstraints:@[
-      [self.webView.leadingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.leadingAnchor],
-      [self.webView.trailingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.trailingAnchor],
-      [self.webView.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor],
-      [self.webView.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor],
-    ]];
+    [wvConfig release];
+    [self.webView release];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.view.backgroundColor = [self getRandomColor];
-    
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary *tokens = [userDefaults objectForKey:userDefaultsTokens];
-    
-    if (tokens) {
-        NSLog(@"asd");
-        return;
-    }
     
     NSString *urlString = [NSString stringWithFormat:@"%@authorize", OAuth2BaseUrl];
     
@@ -119,6 +99,9 @@ NSString * const userDefaultsTokens = @"user_access_token";
                                       }];
     
     [self.webView loadRequest:request];
+    
+    [urlComponents release];
+    [request release];
 }
 
 #pragma mark - WKNavigationDelegate
@@ -188,15 +171,6 @@ NSString * const userDefaultsTokens = @"user_access_token";
     }];
     
     [task resume];
-}
-
-#pragma mark - Utils
-
-- (UIColor *)getRandomColor {
-    CGFloat hue = ( arc4random() % 256 / 256.0 );
-    CGFloat saturation = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from white
-    CGFloat brightness = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from black
-    return [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
 }
 
 @end

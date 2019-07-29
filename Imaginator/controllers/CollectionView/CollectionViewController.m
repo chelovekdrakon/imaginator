@@ -13,6 +13,7 @@
 @interface CollectionViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
 @property(retain, nonatomic) NSMutableArray *dataModel;
 @property(retain, nonatomic) NSOperationQueue *customQueue;
+@property(retain, nonatomic) NSString *documentsDirectoryPath;
 
 @property(assign, nonatomic) NSInteger pagesLoaded;
 @end
@@ -20,6 +21,7 @@
 @implementation CollectionViewController
 
 static float const safeOffsetY = 1500;
+static NSString * const fileExtension = @"tmp";
 static NSString * const reuseIdentifier = @"Cell";
 static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
 
@@ -36,8 +38,18 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
         self.customQueue = [[[NSOperationQueue alloc] init] autorelease];
         self.customQueue.maxConcurrentOperationCount = 1;
         self.customQueue.qualityOfService = NSQualityOfServiceUserInitiated;
+        
+        self.documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     }
     return self;
+}
+
+- (void)dealloc {
+    [super dealloc];
+    
+    [_dataModel release];
+    [_customQueue release];
+    [_documentsDirectoryPath release];
 }
 
 - (void)loadView {
@@ -88,24 +100,41 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
     cell.backgroundColor = [Colors getRandomColor];
     
     NSDictionary *imageInfo = self.dataModel[indexPath.section][indexPath.item];
-    
     UIImageView *imageView = [imageInfo objectForKey:@"imageView"];
     
     if ([imageView isKindOfClass:[UIImageView class]]) {
         [cell addSubview:imageView];
     } else {
-        NSString *urlString = [imageInfo objectForKey:@"download_url"];
-        NSURL *url = [NSURL URLWithString:urlString];
-        
-        [self uploadImageAtURL:url completion:^(NSData *data) {
-            UIImage *image = [UIImage imageWithData:data];            
-            UIImageView *imageView = [[UIImageView alloc] initWithFrame:cell.bounds];
-            imageView.image = image;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+            NSString *urlString = [imageInfo objectForKey:@"download_url"];
+            NSString *fileId = [imageInfo objectForKey:@"id"];
+            NSURL *url = [NSURL URLWithString:urlString];
             
-            [imageInfo setValue:imageView forKey:@"imageView"];
+            NSString *filePath = [NSString stringWithFormat:@"%@/%@.%@", self.documentsDirectoryPath, fileId, fileExtension];
             
-            [cell addSubview:imageView];
-        }];
+            void(^drawImage)(NSData *) = ^void(NSData *data) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    UIImage *image = [UIImage imageWithData:data];
+                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:cell.bounds];
+                    imageView.image = image;
+                    
+                    [imageInfo setValue:imageView forKey:@"imageView"];
+                    
+                    [cell addSubview:imageView];
+                });
+            };
+            
+            if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+                NSURL *url = [NSURL fileURLWithPath:filePath];
+                NSData *data = [NSData dataWithContentsOfURL:url];
+                drawImage(data);
+            } else {
+                [self uploadImageAtURL:url withFileId:fileId completion:^(NSData *data) {
+                    drawImage(data);
+                }];
+            }
+        });
+
     }
     
     return cell;
@@ -183,28 +212,71 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
 
 #pragma mark - Utils
 
-- (void)uploadImageAtURL:(NSURL *)url completion:(void(^)(NSData *))completionHandler {
-    NSURLSessionTask *task = [[NSURLSession sharedSession] dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+- (void)uploadImageAtURL:(NSURL *)url withFileId:(NSString *)fileId completion:(void(^)(NSData *))completionHandler {
+    NSURLSessionTask *task = [[NSURLSession sharedSession] downloadTaskWithURL:url completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        
+
         if (httpResponse.statusCode != 200) {
             NSLog(@"Response status code: %ld", httpResponse.statusCode);
             return;
         }
-        
+
         if (error) {
             NSLog(@"Error: %@", error.localizedDescription);
             return;
         }
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            completionHandler(data);
-        });
+        NSString *newPath = [NSString stringWithFormat:@"%@/%@.%@", self.documentsDirectoryPath, fileId, fileExtension];
+        NSURL *newLocation = [NSURL fileURLWithPath:newPath];
+        
+        NSError *moveError = nil;
+        BOOL isFileMoved = [[NSFileManager defaultManager] moveItemAtURL:location
+                                                                   toURL:newLocation
+                                                                   error:&moveError];
+        
+        NSData *data = nil;
+        
+        if (!isFileMoved) {
+            data = [NSData dataWithContentsOfURL:location];
+            NSLog(@"Move file error: %@", moveError);
+        } else {
+            data = [NSData dataWithContentsOfURL:newLocation];
+        }
+        
+        completionHandler(data);
     }];
+    
+//    NSURLSessionTask *task = [[NSURLSession sharedSession] dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+//
+//        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+//
+//        if (httpResponse.statusCode != 200) {
+//            NSLog(@"Response status code: %ld", httpResponse.statusCode);
+//            return;
+//        }
+//
+//        if (error) {
+//            NSLog(@"Error: %@", error.localizedDescription);
+//            return;
+//        }
+//
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            completionHandler(data);
+//        });
+//    }];
     
     [task resume];
 }
 
+-(void)saveImage:(UIImage *)image withFileName:(NSString *)imageName ofType:(NSString *)extension inDirectory:(NSString *)directoryPath {
+    if ([[extension lowercaseString] isEqualToString:@"png"]) {
+        [UIImagePNGRepresentation(image) writeToFile:[directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", imageName, @"png"]] options:NSAtomicWrite error:nil];
+    } else if ([[extension lowercaseString] isEqualToString:@"jpg"] || [[extension lowercaseString] isEqualToString:@"jpeg"]) {
+        [UIImageJPEGRepresentation(image, 1.0) writeToFile:[directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", imageName, @"jpg"]] options:NSAtomicWrite error:nil];
+    } else {
+        NSLog(@"Image Save Failed\nExtension: (%@) is not recognized, use (PNG/JPG)", extension);
+    }
+}
 
 @end

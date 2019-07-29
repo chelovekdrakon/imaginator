@@ -45,6 +45,9 @@ NSString * const userDefaultsTokens = @"user_access_token";
                                                 @"Accept":@"application/json",
                                                 };
         self.session = [NSURLSession sessionWithConfiguration:sessionConfig];
+        
+        self.navigationItem.hidesBackButton = YES;
+        self.navigationItem.title = @"Imaginator";
     }
     return self;
 }

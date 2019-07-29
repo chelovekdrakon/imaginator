@@ -22,6 +22,8 @@
     
     MainViewController *vc = [[MainViewController alloc] init];
     UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
+    nc.navigationItem.hidesBackButton = YES;
+    nc.navigationItem.title = @"Imaginator";
     
     [self.window setRootViewController:nc];
     [self.window makeKeyAndVisible];

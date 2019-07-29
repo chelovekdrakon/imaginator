@@ -44,6 +44,9 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
         self.customQueue.qualityOfService = NSQualityOfServiceUserInitiated;
         
         self.documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+        
+        self.navigationItem.hidesBackButton = YES;
+        self.navigationItem.title = @"Imaginator";
     }
     return self;
 }

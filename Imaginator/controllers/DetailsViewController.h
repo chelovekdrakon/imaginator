@@ -10,4 +10,5 @@
 
 @interface DetailsViewController : UIViewController
 - (id)initWithImage:(UIImage *)image;
+@property(retain, nonatomic) NSString *text;
 @end

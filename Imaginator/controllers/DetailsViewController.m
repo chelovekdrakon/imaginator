@@ -25,12 +25,19 @@
 - (void)dealloc {
     [super dealloc];
     [_image release];
+    [_text release];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     UIImageView *imageView = [[[UIImageView alloc] initWithImage:self.image] autorelease];
+    
+    UILabel *label = [[[UILabel alloc] init] autorelease];
+    label.text = self.text;
+    [label sizeToFit];
+    [imageView addSubview:label];
+    
     [self.view addSubview:imageView];
     
     imageView.translatesAutoresizingMaskIntoConstraints = NO;

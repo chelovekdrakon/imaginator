@@ -110,7 +110,7 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
     UIImage *image = [imageInfo objectForKey:@"image"];
     
     if ([image isKindOfClass:[UIImage class]]) {
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:cell.bounds];
+        UIImageView *imageView = [[[UIImageView alloc] initWithFrame:cell.bounds] autorelease];
         imageView.image = image;
         [cell addSubview:imageView];
     } else {
@@ -126,7 +126,7 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
                     UIImage *image = [UIImage imageWithData:data];
                     [imageInfo setValue:image forKey:@"image"];
 
-                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:cell.bounds];
+                    UIImageView *imageView = [[[UIImageView alloc] initWithFrame:cell.bounds] autorelease];
                     imageView.image = image;
                     
                     [cell addSubview:imageView];
@@ -156,6 +156,7 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
     UIImage *image = [imageInfo objectForKey:@"image"];
     
     DetailsViewController *detailsVC = [[DetailsViewController alloc] initWithImage:image];
+    detailsVC.text = [imageInfo objectForKey:@"download_url"];
     
     UISwipeGestureRecognizer *swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleDetailsViewSwipe:)];
     swipeGesture.direction = UISwipeGestureRecognizerDirectionDown;

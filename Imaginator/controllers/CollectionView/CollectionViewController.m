@@ -247,25 +247,6 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
         completionHandler(data);
     }];
     
-//    NSURLSessionTask *task = [[NSURLSession sharedSession] dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-//
-//        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-//
-//        if (httpResponse.statusCode != 200) {
-//            NSLog(@"Response status code: %ld", httpResponse.statusCode);
-//            return;
-//        }
-//
-//        if (error) {
-//            NSLog(@"Error: %@", error.localizedDescription);
-//            return;
-//        }
-//
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            completionHandler(data);
-//        });
-//    }];
-    
     [task resume];
 }
 

@@ -1,5 +1,5 @@
 //
-//  CollectionViewLayout.h
+//  CollectionViewCell.h
 //  Imaginator
 //
 //  Created by Фёдор Морев on 7/28/19.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CollectionViewLayout : UICollectionViewLayout
-- (void)updateDataModel:(NSArray *)array;
+@interface CollectionViewCell : UICollectionViewCell
+
 @end

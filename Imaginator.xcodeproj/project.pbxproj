@@ -18,6 +18,7 @@
 		325709CF22EDF24100D796AB /* Colors.m in Sources */ = {isa = PBXBuildFile; fileRef = 325709CE22EDF24100D796AB /* Colors.m */; };
 		325709D322EDF42D00D796AB /* CollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 325709D222EDF42D00D796AB /* CollectionViewController.m */; };
 		325709D622EDFF8F00D796AB /* CollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 325709D522EDFF8F00D796AB /* CollectionViewLayout.m */; };
+		325709D922EE301500D796AB /* CollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 325709D822EE301500D796AB /* CollectionViewCell.m */; };
 		32F4E0AA22EDBE6400EF70EE /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F4E0A922EDBE6400EF70EE /* MainViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -52,6 +53,8 @@
 		325709D222EDF42D00D796AB /* CollectionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CollectionViewController.m; sourceTree = "<group>"; };
 		325709D422EDFF8F00D796AB /* CollectionViewLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollectionViewLayout.h; sourceTree = "<group>"; };
 		325709D522EDFF8F00D796AB /* CollectionViewLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CollectionViewLayout.m; sourceTree = "<group>"; };
+		325709D722EE301500D796AB /* CollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollectionViewCell.h; sourceTree = "<group>"; };
+		325709D822EE301500D796AB /* CollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CollectionViewCell.m; sourceTree = "<group>"; };
 		32F4E0A822EDBE6400EF70EE /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		32F4E0A922EDBE6400EF70EE /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -146,6 +149,8 @@
 				325709D522EDFF8F00D796AB /* CollectionViewLayout.m */,
 				325709D122EDF42D00D796AB /* CollectionViewController.h */,
 				325709D222EDF42D00D796AB /* CollectionViewController.m */,
+				325709D722EE301500D796AB /* CollectionViewCell.h */,
+				325709D822EE301500D796AB /* CollectionViewCell.m */,
 			);
 			path = CollectionView;
 			sourceTree = "<group>";
@@ -265,6 +270,7 @@
 				325709CF22EDF24100D796AB /* Colors.m in Sources */,
 				3200B2C222EC3272008CF5E0 /* main.m in Sources */,
 				32F4E0AA22EDBE6400EF70EE /* MainViewController.m in Sources */,
+				325709D922EE301500D796AB /* CollectionViewCell.m in Sources */,
 				3200B2B422EC3270008CF5E0 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

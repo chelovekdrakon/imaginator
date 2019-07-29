@@ -7,6 +7,7 @@
 //
 
 #import "../utils/Colors.h"
+#import "../utils/Controllers.h"
 #import "MainViewController.h"
 #import "LoginViewController.h"
 #import "CollectionView/CollectionViewController.h"
@@ -62,7 +63,7 @@
                       context:NULL];
 
         self.loginView.modalPresentationStyle = UIModalPresentationPopover;
-        [[self getRootVC] presentViewController:self.loginView animated:YES completion:nil];
+        [[Controllers getRootVC] presentViewController:self.loginView animated:YES completion:nil];
     }
 }
 
@@ -79,7 +80,7 @@
             [self.loginView removeFromParentViewController];
             [self.loginView.view removeFromSuperview];
              
-            [[self getRootVC] dismissViewControllerAnimated:self.loginView completion:^{
+            [[Controllers getRootVC] dismissViewControllerAnimated:self.loginView completion:^{
                 [self.loginView release];
                 [self loadCollectionView];
             }];
@@ -93,14 +94,5 @@
     self.collectionView = [[[CollectionViewController alloc] init] autorelease];
     [self.navigationController pushViewController:self.collectionView animated:YES];
 }
-
-- (UIViewController *)getRootVC {
-    UIViewController *rootViewController = [[[[UIApplication sharedApplication]delegate] window] rootViewController];
-    while (rootViewController.presentedViewController) {
-        rootViewController = rootViewController.presentedViewController;
-    }
-    return rootViewController;
-}
-
 
 @end

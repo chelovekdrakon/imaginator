@@ -10,7 +10,6 @@
 
 extern NSString *const userDefaultsTokens;
 
-
 @interface LoginViewController : UIViewController
 
 @end

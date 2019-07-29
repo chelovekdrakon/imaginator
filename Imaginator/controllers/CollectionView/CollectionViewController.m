@@ -7,13 +7,17 @@
 //
 
 #import "../../utils/Colors.h"
+#import "../../utils/Controllers.h"
 #import "CollectionViewCell.h"
+#import "../DetailsViewController.h"
 #import "CollectionViewController.h"
 
 @interface CollectionViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
 @property(retain, nonatomic) NSMutableArray *dataModel;
 @property(retain, nonatomic) NSOperationQueue *customQueue;
 @property(retain, nonatomic) NSString *documentsDirectoryPath;
+
+@property(retain, nonatomic) UIViewController *presentedDetailsController;
 
 @property(assign, nonatomic) NSInteger pagesLoaded;
 @end
@@ -100,9 +104,11 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
     cell.backgroundColor = [Colors getRandomColor];
     
     NSDictionary *imageInfo = self.dataModel[indexPath.section][indexPath.item];
-    UIImageView *imageView = [imageInfo objectForKey:@"imageView"];
+    UIImage *image = [imageInfo objectForKey:@"image"];
     
-    if ([imageView isKindOfClass:[UIImageView class]]) {
+    if ([image isKindOfClass:[UIImage class]]) {
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:cell.bounds];
+        imageView.image = image;
         [cell addSubview:imageView];
     } else {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
@@ -115,10 +121,10 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
             void(^drawImage)(NSData *) = ^void(NSData *data) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     UIImage *image = [UIImage imageWithData:data];
+                    [imageInfo setValue:image forKey:@"image"];
+
                     UIImageView *imageView = [[UIImageView alloc] initWithFrame:cell.bounds];
                     imageView.image = image;
-                    
-                    [imageInfo setValue:imageView forKey:@"imageView"];
                     
                     [cell addSubview:imageView];
                 });
@@ -142,6 +148,29 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
 
 #pragma mark <UICollectionViewDelegate>
 
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSDictionary *imageInfo = self.dataModel[indexPath.section][indexPath.item];
+    UIImage *image = [imageInfo objectForKey:@"image"];
+    
+    DetailsViewController *detailsVC = [[DetailsViewController alloc] initWithImage:image];
+    
+    UISwipeGestureRecognizer *swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleDetailsViewSwipe:)];
+    swipeGesture.direction = UISwipeGestureRecognizerDirectionDown;
+    
+    [detailsVC.view addGestureRecognizer:swipeGesture];
+    
+    detailsVC.modalPresentationStyle = UIModalPresentationPopover;
+    [[Controllers getRootVC] presentViewController:detailsVC animated:YES completion:nil];
+}
+
+- (void)handleDetailsViewSwipe:(UISwipeGestureRecognizer *)swipeGesture {
+    UIViewController *topVC = [Controllers getRootVC];
+    
+    [topVC dismissViewControllerAnimated:topVC completion:^{
+        [_presentedDetailsController release];
+        _presentedDetailsController = nil;
+    }];
+}
 
 #pragma mark - UIScrollViewDelegate
 
@@ -248,16 +277,6 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
     }];
     
     [task resume];
-}
-
--(void)saveImage:(UIImage *)image withFileName:(NSString *)imageName ofType:(NSString *)extension inDirectory:(NSString *)directoryPath {
-    if ([[extension lowercaseString] isEqualToString:@"png"]) {
-        [UIImagePNGRepresentation(image) writeToFile:[directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", imageName, @"png"]] options:NSAtomicWrite error:nil];
-    } else if ([[extension lowercaseString] isEqualToString:@"jpg"] || [[extension lowercaseString] isEqualToString:@"jpeg"]) {
-        [UIImageJPEGRepresentation(image, 1.0) writeToFile:[directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", imageName, @"jpg"]] options:NSAtomicWrite error:nil];
-    } else {
-        NSLog(@"Image Save Failed\nExtension: (%@) is not recognized, use (PNG/JPG)", extension);
-    }
 }
 
 @end

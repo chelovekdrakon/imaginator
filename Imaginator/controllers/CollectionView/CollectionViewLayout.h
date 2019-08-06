@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface CollectionViewLayout : UICollectionViewLayout
-- (void)updateDataModel:(NSArray *)array;
+
 @end

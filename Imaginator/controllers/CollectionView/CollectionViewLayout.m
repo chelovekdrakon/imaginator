@@ -7,10 +7,10 @@
 //
 
 #import "CollectionViewLayout.h"
+#import "CollectionViewDataModel.h"
 
 @interface CollectionViewLayout()
 @property(retain, nonatomic) NSArray *layoutArr;
-@property(retain, nonatomic) NSArray *dataModel;
 
 @property(assign, nonatomic) CGSize screenSize;
 @property(assign, nonatomic) CGSize currentContentSize;
@@ -22,16 +22,14 @@
 - (id)init {
     self = [super init];
     if (self) {
-        
+        self.layoutArr = [NSArray array];
     }
     return self;
 }
 
 - (void)dealloc {
     [super dealloc];
-    
     [_layoutArr release];
-    [_dataModel release];
 }
 
 - (void)prepareLayout {
@@ -63,11 +61,6 @@
     return YES;
 }
 
-
-- (void)updateDataModel:(NSArray *)array {
-    self.dataModel = array;
-}
-
 - (NSArray *)generateLayout {
     NSMutableArray *resultArray = [NSMutableArray array];
     
@@ -88,7 +81,8 @@
         for (NSInteger item = 0; item < itemsCount; item++) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:section];
             
-            NSDictionary *pictureInfo = self.dataModel[section][item];
+            NSArray *dataModel = [[CollectionViewDataModel shared] dataModel];
+            NSDictionary *pictureInfo = dataModel[section][item];
             CGSize pictureSize = [self getPictureSizeFromInfo:pictureInfo];
             
             UICollectionViewLayoutAttributes *attrs = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];

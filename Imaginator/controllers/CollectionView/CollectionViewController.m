@@ -11,9 +11,9 @@
 #import "CollectionViewCell.h"
 #import "../DetailsViewController.h"
 #import "CollectionViewController.h"
+#import "CollectionViewDataModel.h"
 
 @interface CollectionViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
-@property(retain, nonatomic) NSMutableArray *dataModel;
 @property(retain, nonatomic) NSOperationQueue *customQueue;
 @property(retain, nonatomic) NSString *documentsDirectoryPath;
 
@@ -35,9 +35,6 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
     self = [super init];
     if (self) {
         self.pagesLoaded = 0;
-        self.dataModel = [NSMutableArray array];
-        [self.dataModel addObject:[NSMutableArray array]];
-        [self.dataModel addObject:[NSMutableArray array]];
         
         self.customQueue = [[[NSOperationQueue alloc] init] autorelease];
         self.customQueue.maxConcurrentOperationCount = 1;
@@ -54,7 +51,6 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
 - (void)dealloc {
     [super dealloc];
     
-    [_dataModel release];
     [_customQueue release];
     [_documentsDirectoryPath release];
 }
@@ -69,7 +65,6 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
     [super viewDidLoad];
     
     self.collectionViewLayout = [[[CollectionViewLayout alloc] init] autorelease];
-    [self.collectionViewLayout updateDataModel:self.dataModel];
     
     self.collectionView = [[[UICollectionView alloc] initWithFrame:self.view.bounds
                                               collectionViewLayout:self.collectionViewLayout] autorelease];
@@ -95,18 +90,22 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
 #pragma mark <UICollectionViewDataSource>
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return [self.dataModel count];
+    NSArray *dataModel = [[CollectionViewDataModel shared] dataModel];
+    return [dataModel count];
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return [self.dataModel[section] count];
+    NSArray *dataModel = [[CollectionViewDataModel shared] dataModel];
+    return [dataModel[section] count];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     CollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     cell.backgroundColor = [Colors getRandomColor];
     
-    NSDictionary *imageInfo = self.dataModel[indexPath.section][indexPath.item];
+    NSArray *dataModel = [[CollectionViewDataModel shared] dataModel];
+    
+    NSDictionary *imageInfo = dataModel[indexPath.section][indexPath.item];
     
     NSString *urlString = [imageInfo objectForKey:@"download_url"];
     NSString *fileId = [imageInfo objectForKey:@"id"];
@@ -141,7 +140,8 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
 #pragma mark <UICollectionViewDelegate>
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSDictionary *imageInfo = self.dataModel[indexPath.section][indexPath.item];
+    NSArray *dataModel = [[CollectionViewDataModel shared] dataModel];
+    NSDictionary *imageInfo = dataModel[indexPath.section][indexPath.item];
     
     CollectionViewCell *cell = (CollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
     
@@ -210,18 +210,11 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
                 return;
             }
             
-            NSMutableArray *dataModelCopy = [self.dataModel copy];
-            
-            for (int i = 0; i < [pictures count]; i++) {
-                NSInteger section = i % [self.dataModel count];
-                [dataModelCopy[section] addObject:[pictures[i] mutableCopy]];
-            }
+            [[CollectionViewDataModel shared] extendDataModelWithArray:pictures];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.pagesLoaded += 1;
-                self.dataModel = dataModelCopy;
                 [self.collectionView reloadData];
-                [self.collectionViewLayout updateDataModel:self.dataModel];
                 [self.collectionViewLayout invalidateLayout];
                 
                 [self.customQueue setSuspended:NO];

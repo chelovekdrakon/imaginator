@@ -21,6 +21,7 @@
 		325709D922EE301500D796AB /* CollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 325709D822EE301500D796AB /* CollectionViewCell.m */; };
 		325709DC22EF055600D796AB /* DetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 325709DB22EF055600D796AB /* DetailsViewController.m */; };
 		325709DF22EF07D100D796AB /* Controllers.m in Sources */ = {isa = PBXBuildFile; fileRef = 325709DE22EF07D100D796AB /* Controllers.m */; };
+		3261882522FA10ED004DD1CE /* CollectionViewDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3261882422FA10ED004DD1CE /* CollectionViewDataModel.m */; };
 		32F4E0AA22EDBE6400EF70EE /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F4E0A922EDBE6400EF70EE /* MainViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -61,6 +62,8 @@
 		325709DB22EF055600D796AB /* DetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailsViewController.m; sourceTree = "<group>"; };
 		325709DD22EF07D100D796AB /* Controllers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Controllers.h; sourceTree = "<group>"; };
 		325709DE22EF07D100D796AB /* Controllers.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Controllers.m; sourceTree = "<group>"; };
+		3261882322FA10ED004DD1CE /* CollectionViewDataModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollectionViewDataModel.h; sourceTree = "<group>"; };
+		3261882422FA10ED004DD1CE /* CollectionViewDataModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CollectionViewDataModel.m; sourceTree = "<group>"; };
 		32F4E0A822EDBE6400EF70EE /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		32F4E0A922EDBE6400EF70EE /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -153,6 +156,8 @@
 		325709CC22EDEE9500D796AB /* CollectionView */ = {
 			isa = PBXGroup;
 			children = (
+				3261882322FA10ED004DD1CE /* CollectionViewDataModel.h */,
+				3261882422FA10ED004DD1CE /* CollectionViewDataModel.m */,
 				325709D422EDFF8F00D796AB /* CollectionViewLayout.h */,
 				325709D522EDFF8F00D796AB /* CollectionViewLayout.m */,
 				325709D122EDF42D00D796AB /* CollectionViewController.h */,
@@ -282,6 +287,7 @@
 				3200B2C222EC3272008CF5E0 /* main.m in Sources */,
 				32F4E0AA22EDBE6400EF70EE /* MainViewController.m in Sources */,
 				325709DC22EF055600D796AB /* DetailsViewController.m in Sources */,
+				3261882522FA10ED004DD1CE /* CollectionViewDataModel.m in Sources */,
 				325709D922EE301500D796AB /* CollectionViewCell.m in Sources */,
 				3200B2B422EC3270008CF5E0 /* AppDelegate.m in Sources */,
 			);

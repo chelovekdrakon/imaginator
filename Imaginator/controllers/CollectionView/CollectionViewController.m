@@ -107,44 +107,33 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
     cell.backgroundColor = [Colors getRandomColor];
     
     NSDictionary *imageInfo = self.dataModel[indexPath.section][indexPath.item];
-    UIImage *image = [imageInfo objectForKey:@"image"];
     
-    if ([image isKindOfClass:[UIImage class]]) {
-        UIImageView *imageView = [[[UIImageView alloc] initWithFrame:cell.bounds] autorelease];
-        imageView.image = image;
-        [cell addSubview:imageView];
-    } else {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-            NSString *urlString = [imageInfo objectForKey:@"download_url"];
-            NSString *fileId = [imageInfo objectForKey:@"id"];
-            NSURL *url = [NSURL URLWithString:urlString];
+    NSString *urlString = [imageInfo objectForKey:@"download_url"];
+    NSString *fileId = [imageInfo objectForKey:@"id"];
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    NSString *filePath = [NSString stringWithFormat:@"%@/%@.%@", self.documentsDirectoryPath, fileId, fileExtension];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        void(^drawImage)(NSData *) = ^void(NSData *data) {
+            UIImage *image = [UIImage imageWithData:data];
             
-            NSString *filePath = [NSString stringWithFormat:@"%@/%@.%@", self.documentsDirectoryPath, fileId, fileExtension];
-            
-            void(^drawImage)(NSData *) = ^void(NSData *data) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    UIImage *image = [UIImage imageWithData:data];
-                    [imageInfo setValue:image forKey:@"image"];
-
-                    UIImageView *imageView = [[[UIImageView alloc] initWithFrame:cell.bounds] autorelease];
-                    imageView.image = image;
-                    
-                    [cell addSubview:imageView];
-                });
-            };
-            
-            if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-                NSURL *url = [NSURL fileURLWithPath:filePath];
-                NSData *data = [NSData dataWithContentsOfURL:url];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                cell.imageView.image = image;
+                cell.imageView.frame = cell.bounds;
+            });
+        };
+        
+        if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+            NSURL *url = [NSURL fileURLWithPath:filePath];
+            NSData *data = [NSData dataWithContentsOfURL:url];
+            drawImage(data);
+        } else {
+            [self uploadImageAtURL:url withFileId:fileId completion:^(NSData *data) {
                 drawImage(data);
-            } else {
-                [self uploadImageAtURL:url withFileId:fileId completion:^(NSData *data) {
-                    drawImage(data);
-                }];
-            }
-        });
-
-    }
+            }];
+        }
+    });
     
     return cell;
 }
@@ -153,9 +142,10 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *imageInfo = self.dataModel[indexPath.section][indexPath.item];
-    UIImage *image = [imageInfo objectForKey:@"image"];
     
-    DetailsViewController *detailsVC = [[DetailsViewController alloc] initWithImage:image];
+    CollectionViewCell *cell = (CollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    
+    DetailsViewController *detailsVC = [[DetailsViewController alloc] initWithImage:cell.imageView.image];
     detailsVC.text = [imageInfo objectForKey:@"download_url"];
     
     UISwipeGestureRecognizer *swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleDetailsViewSwipe:)];
@@ -227,13 +217,12 @@ static NSString * const requestUrlString = @"https://picsum.photos/v2/list";
                 [dataModelCopy[section] addObject:[pictures[i] mutableCopy]];
             }
             
-            self.dataModel = dataModelCopy;
-            
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.pagesLoaded += 1;
+                self.dataModel = dataModelCopy;
                 [self.collectionView reloadData];
-                [self.collectionViewLayout invalidateLayout];
                 [self.collectionViewLayout updateDataModel:self.dataModel];
+                [self.collectionViewLayout invalidateLayout];
                 
                 [self.customQueue setSuspended:NO];
             });
